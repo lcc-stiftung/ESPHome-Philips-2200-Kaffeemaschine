@@ -1,0 +1,124 @@
+substitutions:
+  name: "philips-2200"
+  friendly_name: "Philips 2200 Kaffeemaschine"
+
+  # UART-Pins für die Mainboard Schnittstelle
+  uart_tx_pin: GPI23
+  uart_rx_pin: GPIO5
+
+  # UART-Pins für die Display Schnittstelle
+  display_uart_tx_pin: GPIO3
+  display_uart_rx_pin: GPIO1
+
+  # Display Power Pin
+  display_power: GPI19
+
+  # Tassensensor Pin
+  tassensensor: GPI16
+
+esp32:
+  board: wemos_d1_mini32
+
+# ----------------------------------
+# ----         ESPHOME          ----
+# ----------------------------------
+
+esphome:
+  name: "${name}"
+  name_add_mac_suffix: true
+  project:
+    name: lccstiftung.philips2200
+    version: "1.0"
+
+dashboard_import:
+  package_import_url: github://lcc-stiftung/ESPHome-Philips-2200-Kaffeemaschine/ESP-Home/philips_2200.yaml@main
+  import_full_config: false
+
+external_components:
+  - source: github://TillFleisch/ESPHome-Philips-Smart-Coffee@main
+
+wifi:
+  ssid: !secret wifi_iot_ssid
+  password: !secret wifi_iot_password
+
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: ${friendly_name} AP
+    password: !secret esphome_fallback_ap_password
+
+captive_portal:
+
+# Enable Home Assistant API
+api:
+  password: !secret esphome_api_password
+
+ota:
+  password: !secret esphome_api_password
+
+# Enable logging
+logger:
+  # Disable serial logging
+  baud_rate: 0
+
+# ----------------------------------
+# ----       UART CONFIG        ----
+# ----------------------------------
+
+uart:
+  # UART connected to the mainboard
+  - tx_pin: uart_tx_pin
+    rx_pin: uart_rx_pin
+    baud_rate: 115200
+    id: uart_mainboard
+
+  # UART connected to the display
+  - tx_pin: display_uart_tx_pin
+    rx_pin: display_uart_rx_pin
+    baud_rate: 115200
+    id: uart_display
+
+# ----------------------------------
+# ----        HA CONFIG         ----
+# ----------------------------------
+
+philips_series_2200:
+  display_uart: uart_display
+  mainboard_uart: uart_mainboard
+  power_pin: display_power
+  id: philip
+
+text_sensor:
+  - platform: philips_status_sensor
+    controller_id: philip
+    name: "Status"
+
+switch:
+  - platform: philips_power_switch
+    controller_id: philip
+    name: "Power"
+    icon: mdi:coffee-maker
+
+button:
+  - platform: philips_action_button
+    controller_id: philip
+    action: MAKE_COFFEE
+    name: "Kaffee machen"
+    icon: mdi:coffee
+
+  - platform: philips_action_button
+    controller_id: philip
+    action: SELECT_HOT_WATER
+    name: "Heißes Wasser auswählen"
+    icon: mdi:tea
+
+  - platform: philips_action_button
+    controller_id: philip
+    action: PLAY_PAUSE
+    name: "Start / Stop"
+    icon: mdi:play-pause
+
+binary_sensor:
+  - platform: gpio
+    pin: tassensensor
+    name: "${name} Tassensensor"
+    device_class: occupancy

@@ -1,0 +1,10 @@
+substitutions:
+  name: "philips-2200"
+  friendly_name: "Philips 2200 Kaffeemaschine"
+
+  # UART-Pins für die Display Schnittstelle
+  uart_tx_pin: GPIO1
+  uart_rx_pin: GPIO3
+
+packages:
+  barcode: github://lcc-stiftung/ESPHome-Philips-2200-Kaffeemaschine/ESP-Home/philips_2200.yaml@main
