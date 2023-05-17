@@ -35,7 +35,7 @@ dashboard_import:
   import_full_config: false
 
 external_components:
-  - source: github://TillFleisch/ESPHome-Philips-Smart-Coffee@main
+  - source: github://lcc-stiftung/ESPHome-Philips-2200-Kaffeemaschine/ESP-Home/philips_2200.yaml@main
 
 wifi:
   ssid: !secret wifi_iot_ssid
