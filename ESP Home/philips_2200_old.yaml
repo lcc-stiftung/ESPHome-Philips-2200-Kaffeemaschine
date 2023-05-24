@@ -1,9 +1,6 @@
 substitutions:
   name: "philips-2200"
   friendly_name: "Philips 2200 Kaffeemaschine"
-  room: ""
-  project_name: "lccstiftung.philips2200"
-  project_version: "1.0.0"
 
   # UART-Pins für die Mainboard Schnittstelle
   uart_tx_pin: GPI23
@@ -30,18 +27,15 @@ esphome:
   name: "${name}"
   name_add_mac_suffix: true
   project:
-    name: "${project_name}"
-    version: "${project_version}"
+    name: lccstiftung.philips2200
+    version: "1.0"
 
-# Enable logging
-logger:
-  # Disable serial logging
-  baud_rate: 0
+dashboard_import:
+  package_import_url: github://lcc-stiftung/ESPHome-Philips-2200-Kaffeemaschine/ESP-Home/philips_2200.yaml@main
+  import_full_config: false
 
-api:
-
-ota:
-  password: !secret esphome_api_password
+external_components:
+  - source: github://lcc-stiftung/ESPHome-Philips-2200-Kaffeemaschine/ESP-Home/philips_2200.yaml@main
 
 wifi:
   ssid: !secret wifi_iot_ssid
@@ -54,19 +48,19 @@ wifi:
 
 captive_portal:
 
-improv_serial:
+# Enable Home Assistant API
+api:
+  password: !secret esphome_api_password
 
-esp32_improv:
-  authorizer: none
-  
-dashboard_import:
-  package_import_url: github://lcc-stiftung/ESPHome-Philips-2200-Kaffeemaschine/ESP Home/philips_2200.yaml@main
-  import_full_config: false
+ota:
+  password: !secret esphome_api_password
 
-external_components:
-  - source: github://lcc-stiftung/ESPHome-Philips-2200-Kaffeemaschine@main
+# Enable logging
+logger:
+  # Disable serial logging
+  baud_rate: 0
 
-  # ----------------------------------
+# ----------------------------------
 # ----       UART CONFIG        ----
 # ----------------------------------
 
