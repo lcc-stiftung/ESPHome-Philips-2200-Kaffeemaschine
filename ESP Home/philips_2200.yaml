@@ -3,10 +3,10 @@ substitutions:
   friendly_name: "Philips 2200 Kaffeemaschine"
   room: ""
   project_name: "lccstiftung.philips2200"
-  project_version: "1.0.0"
+  project_version: "1.0.1"
 
   # UART-Pins für die Mainboard Schnittstelle
-  uart_tx_pin: GPI23
+  uart_tx_pin: GPIO23
   uart_rx_pin: GPIO5
 
   # UART-Pins für die Display Schnittstelle
@@ -14,13 +14,13 @@ substitutions:
   display_uart_rx_pin: GPIO1
 
   # Display Power Pin
-  display_power: GPI19
+  display_power: GPIO16
 
   # Tassensensor Pin
-  tassensensor: GPI16
+  tassensensor: GPIO19
 
 esp32:
-  board: wemos_d1_mini32
+  board: esp32dev
 
 # ----------------------------------
 # ----         ESPHOME          ----
@@ -41,7 +41,7 @@ logger:
 api:
 
 ota:
-  password: !secret esphome_api_password
+  password: !secret esphome_ota_password
 
 wifi:
   ssid: !secret wifi_iot_ssid
@@ -53,14 +53,9 @@ wifi:
     password: !secret esphome_fallback_ap_password
 
 captive_portal:
-
-improv_serial:
-
-esp32_improv:
-  authorizer: none
   
 dashboard_import:
-  package_import_url: github://lcc-stiftung/ESPHome-Philips-2200-Kaffeemaschine/ESP Home/philips_2200.yaml@main
+  package_import_url: github://lcc-stiftung/ESPHome-Philips-2200-Kaffeemaschine/ESP_Home/philips_2200.yaml@main
   import_full_config: false
 
 external_components:
@@ -72,14 +67,14 @@ external_components:
 
 uart:
   # UART connected to the mainboard
-  - tx_pin: uart_tx_pin
-    rx_pin: uart_rx_pin
+  - tx_pin: ${uart_tx_pin}
+    rx_pin: ${uart_rx_pin}
     baud_rate: 115200
     id: uart_mainboard
 
   # UART connected to the display
-  - tx_pin: display_uart_tx_pin
-    rx_pin: display_uart_rx_pin
+  - tx_pin: ${display_uart_tx_pin}
+    rx_pin: ${display_uart_rx_pin}
     baud_rate: 115200
     id: uart_display
 
@@ -90,7 +85,7 @@ uart:
 philips_series_2200:
   display_uart: uart_display
   mainboard_uart: uart_mainboard
-  power_pin: display_power
+  power_pin: ${display_power}
   id: philip
 
 text_sensor:
@@ -125,5 +120,5 @@ button:
 
 binary_sensor:
   - platform: gpio
-    pin: tassensensor
+    pin: ${tassensensor}
     name: "${name} Tassensensor"
