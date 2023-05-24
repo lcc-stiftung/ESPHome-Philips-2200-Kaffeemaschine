@@ -3,15 +3,15 @@ substitutions:
   friendly_name: "Philips 2200 Kaffeemaschine"
   room: ""
   project_name: "lccstiftung.philips2200"
-  project_version: "1.0.1"
+  project_version: "1.0.0"
 
   # UART-Pins für die Mainboard Schnittstelle
-  uart_tx_pin: GPIO23
-  uart_rx_pin: GPIO05
+  uart_tx_pin: GPIO03
+  uart_rx_pin: GPIO01
 
   # UART-Pins für die Display Schnittstelle
-  display_uart_tx_pin: GPIO3
-  display_uart_rx_pin: GPIO1
+  display_uart_tx_pin: GPIO23
+  display_uart_rx_pin: GPIO05
 
   # Display Power Pin
   display_power: GPIO16
@@ -20,7 +20,7 @@ substitutions:
   tassensensor: GPIO19
 
 esp32:
-  board: esp32dev
+  board: wemos_d1_mini32
 
 # ----------------------------------
 # ----         ESPHOME          ----
@@ -41,7 +41,6 @@ logger:
 api:
 
 ota:
-  password: !secret esphome_ota_password
 
 wifi:
   ssid: !secret wifi_iot_ssid
@@ -50,7 +49,7 @@ wifi:
   # Enable fallback hotspot (captive portal) in case wifi connection fails
   ap:
     ssid: ${friendly_name} AP
-    password: !secret esphome_fallback_ap_password
+    password: "12345678"
 
 captive_portal:
   
@@ -67,14 +66,14 @@ external_components:
 
 uart:
   # UART connected to the mainboard
-  - tx_pin: ${display_uart_tx_pin}
-    rx_pin: ${display_uart_rx_pin}
+  - tx_pin: ${uart_tx_pin}
+    rx_pin: ${uart_rx_pin}
     baud_rate: 115200
     id: uart_mainboard
 
   # UART connected to the display
-  - tx_pin: ${uart_tx_pin}
-    rx_pin: ${uart_rx_pin}
+  - tx_pin: ${display_uart_tx_pin}
+    rx_pin: ${display_uart_rx_pin}
     baud_rate: 115200
     id: uart_display
 
