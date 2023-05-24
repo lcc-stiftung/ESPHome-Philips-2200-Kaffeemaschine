@@ -7,7 +7,7 @@ substitutions:
 
   # UART-Pins für die Mainboard Schnittstelle
   uart_tx_pin: GPIO23
-  uart_rx_pin: GPIO5
+  uart_rx_pin: GPIO05
 
   # UART-Pins für die Display Schnittstelle
   display_uart_tx_pin: GPIO3
@@ -67,14 +67,14 @@ external_components:
 
 uart:
   # UART connected to the mainboard
-  - tx_pin: ${uart_tx_pin}
-    rx_pin: ${uart_rx_pin}
+  - tx_pin: ${display_uart_tx_pin}
+    rx_pin: ${display_uart_rx_pin}
     baud_rate: 115200
     id: uart_mainboard
 
   # UART connected to the display
-  - tx_pin: ${display_uart_tx_pin}
-    rx_pin: ${display_uart_rx_pin}
+  - tx_pin: ${uart_tx_pin}
+    rx_pin: ${uart_rx_pin}
     baud_rate: 115200
     id: uart_display
 
